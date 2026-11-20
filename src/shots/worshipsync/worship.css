@@ -1,0 +1,283 @@
+/* Site look: near-monochrome, Geist. The page is the ground. */
+.ws {
+  & .ss-stage {
+    --ss-font: 'Geist', system-ui, -apple-system, sans-serif;
+    --ss-mono: 'Geist Mono', ui-monospace, monospace;
+    --ss-canvas: #f3f3f1;
+    --ss-surface: #fbfbfa;
+    --ss-chrome: #f3f3f1;
+    --ss-raised: #fbfbfa;
+    --ss-well: transparent;
+    --ss-line: #e7e7e4;
+    --ss-line-faint: #eeeeec;
+    --ss-fill: #ebebe8;
+    --ss-text-strong: #0b0b0c;
+    --ss-text: #6b6b70;
+    --ss-text-faint: #9a9aa0;
+    --ss-icon: #6b6b70;
+    --ss-icon-faint: #c9c9cc;
+    --ss-accent: #0b0b0c;
+    --ss-accent-soft: rgba(11, 11, 12, 0.06);
+    --ss-shadow-window: 0 0 0 1px #e7e7e4, 0 8px 20px -12px rgba(11, 11, 12, 0.16);
+    --ss-shadow-hero: 0 0 0 1px #e1e1de, 0 10px 24px -14px rgba(11, 11, 12, 0.2);
+    --ss-shadow-satellite: 0 0 0 1px #dcdcd9, 0 12px 24px -12px rgba(11, 11, 12, 0.28);
+    --ws-signal: #ff4f00;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  & .ss-stage[data-theme='dark'] {
+    --ss-canvas: #0a0a0b;
+    --ss-surface: #121214;
+    --ss-chrome: #0f0f11;
+    --ss-raised: #1a1a1d;
+    --ss-line: #222225;
+    --ss-line-faint: #19191b;
+    --ss-fill: #26262a;
+    --ss-text-strong: #ededee;
+    --ss-text: #8a8a90;
+    --ss-text-faint: #5f5f65;
+    --ss-icon: #8a8a90;
+    --ss-icon-faint: #3a3a3f;
+    --ss-accent: #ededee;
+    --ss-accent-soft: rgba(237, 237, 238, 0.08);
+    --ss-shadow-window: 0 0 0 1px #222225, 0 8px 20px -12px rgba(0, 0, 0, 0.8);
+    --ss-shadow-hero: 0 0 0 1px #2a2a2e, 0 10px 24px -14px rgba(0, 0, 0, 0.9);
+    --ss-shadow-satellite: 0 0 0 1px #34343a, 0 12px 24px -12px rgba(0, 0, 0, 0.9);
+  }
+
+  .ws-window {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 500px;
+    height: 420px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  /* Sidebar: wordmark, set list */
+  .ws-side {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 8px;
+  }
+
+  .ws-mark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 8px;
+    margin-bottom: 14px;
+    color: var(--ss-text-strong);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .ws-side__label {
+    padding: 0 8px;
+    margin-bottom: 4px;
+    color: var(--ss-text-faint);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .ws-songs {
+    display: grid;
+    gap: 2px;
+  }
+
+  /* The key control, in the bar's toolbar slot */
+  .ws-key {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ws-key__label {
+    margin-right: 4px;
+    color: var(--ss-text);
+    font-size: 12px;
+  }
+
+  .ws-key__note {
+    display: inline-flex;
+    justify-content: center;
+    min-width: 28px;
+    color: var(--ss-text-strong);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Chord sheet */
+  .ws-body {
+    background: var(--ss-surface);
+  }
+
+  .ws-sheet {
+    padding: 22px 24px 0;
+  }
+
+  .ws-title {
+    display: block;
+    margin-bottom: 24px;
+    color: var(--ss-text-strong);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .ws-group {
+    margin-bottom: 22px;
+  }
+
+  .ws-chords {
+    position: relative;
+    height: 24px;
+  }
+
+  .ws-chord {
+    position: absolute;
+    top: 0;
+    color: var(--ss-text-strong);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+  }
+
+  .ws-lyric {
+    display: grid;
+    gap: 7px;
+    margin-top: 4px;
+  }
+
+  /* The member's phone: straddles the window's right edge over its margin */
+  .ws-phone {
+    position: absolute;
+    top: 84px;
+    right: 24px;
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .ws-app {
+    padding: 24px 28px 0;
+    font-family: var(--ss-font);
+  }
+
+  .ws-app__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .ws-app__title {
+    color: var(--ss-text-strong);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .ws-app__key {
+    display: inline-flex;
+    justify-content: center;
+    min-width: 64px;
+    padding: 6px 0;
+    border-radius: 12px;
+    background: var(--ss-fill);
+    color: var(--ss-text-strong);
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .ws-live {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 14px 0 34px;
+    color: var(--ss-text);
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .ws-live__dot {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ws-signal);
+  }
+
+  .ws-app__group {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  .ws-app__chords {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .ws-app__chord {
+    color: var(--ss-text-strong);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 42px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Compact: window on top, phone straddling its foot */
+  & .ss-stage[data-layout='compact'] {
+    & .ws-window {
+      top: 16px;
+      left: 16px;
+      width: 380px;
+      height: 240px;
+    }
+
+    & .ws-sheet {
+      padding: 18px 16px 0;
+    }
+
+    & .ws-chord {
+      font-size: 18px;
+    }
+
+    & .ws-key {
+      margin-left: 8px;
+    }
+
+    & .ws-title {
+      margin-bottom: 18px;
+    }
+
+    & .ws-group {
+      margin-bottom: 18px;
+    }
+
+    & .ws-phone {
+      top: 214px;
+      right: 16px;
+    }
+
+    & .ws-app__chord {
+      font-size: 34px;
+    }
+  }
+}
+
+.ws .ws-fill {
+  display: grid;
+  gap: 12pt;
+}
+
+.ws .ws-app__rest {
+  display: grid;
+  gap: 14px;
+}
+.ws .ws-group--rest {
+  margin-top: 4px;
+}

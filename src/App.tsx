@@ -1,185 +1,152 @@
-import Header from './components/Header'
-import Reveal from './components/Reveal'
-import { ArrowIcon, DownloadIcon, MailIcon, SocialIcon } from './components/Icons'
+import { lazy, Suspense, type ReactNode } from 'react'
+import Nav from './components/Nav'
+import { useTheme, type Theme } from './themeContext'
 import { profile } from './data/profile'
 
-function SectionTitle({ id, eyebrow, title }: { id: string; eyebrow: string; title: string }) {
-  return (
-    <div className="section-head">
-      <p className="eyebrow">{eyebrow}</p>
-      <h2 id={`${id}-title`}>{title}</h2>
-    </div>
-  )
-}
+const WorshipSyncShot = lazy(() => import('./shots').then((m) => ({ default: m.WorshipSyncShot })))
+const PlannerShot = lazy(() => import('./shots').then((m) => ({ default: m.PlannerShot })))
 
 const YEAR = new Date().getFullYear()
 
+function ShotPlaceholder() {
+  return <div className="shot-ph" aria-hidden="true" />
+}
+
+function Shot({ kind, theme }: { kind: 'worshipsync' | 'planner'; theme: Theme }) {
+  return (
+    <Suspense fallback={<ShotPlaceholder />}>
+      {kind === 'worshipsync' ? <WorshipSyncShot theme={theme} /> : <PlannerShot theme={theme} />}
+    </Suspense>
+  )
+}
+
+function Ext({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="ul">
+      {children}<span aria-hidden="true"> ↗</span>
+    </a>
+  )
+}
+
+function Row({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+  return (
+    <section id={id} className="section" aria-labelledby={`${id}-h`}>
+      <div className="container row">
+        <h2 id={`${id}-h`} className="label">{label}</h2>
+        <div className="row-body">{children}</div>
+      </div>
+    </section>
+  )
+}
+
 export default function App() {
   const p = profile
+  const { theme } = useTheme()
   return (
     <>
       <a className="skip" href="#main">Skip to content</a>
-      <Header />
+      <Nav />
       <main id="main">
         <section id="top" className="hero container">
-          <p className="mono hero-kicker">Hi, I'm</p>
-          <h1>{p.name}</h1>
-          <p className="hero-title">{p.title}</p>
-          <p className="hero-loc">{p.location}</p>
-          <p className="hero-tag">{p.tagline}</p>
-          <div className="btn-row">
-            <a className="btn primary" href="#projects">View projects</a>
-            <a className="btn" href="#contact">Get in touch</a>
-            {p.resumeUrl && (
-              <a className="btn" href={p.resumeUrl} download>
-                <DownloadIcon /> Resume
-              </a>
-            )}
-          </div>
-          <ul className="social-row" aria-label="Social links">
-            {p.socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer" className="icon-link" aria-label={s.label} title={s.label}>
-                  <SocialIcon label={s.label} />
-                </a>
-              </li>
-            ))}
-            <li>
-              <a href={`mailto:${p.email}`} className="icon-link" aria-label="Email" title="Email">
-                <MailIcon />
-              </a>
-            </li>
-          </ul>
-        </section>
-
-        <section id="about" className="section container" aria-labelledby="about-title">
-          <Reveal>
-            <SectionTitle id="about" eyebrow="01 · About" title="Professional summary" />
-            <p className="lead">{p.about}</p>
-            <dl className="stats">
-              {p.highlights.map((h) => (
-                <div key={h.label} className="stat">
-                  <dt>{h.label}</dt>
-                  <dd>{h.value}</dd>
-                </div>
+          <div>
+            <h1>{p.name}</h1>
+            <p className="hero-sum">{p.summary}</p>
+            <p className="now">
+              <span className="dot" aria-hidden="true" />
+              Currently {p.current.role} at {p.current.company} · {p.current.location}
+            </p>
+            <ul className="links" aria-label="Links">
+              <li><a className="ul" href={`mailto:${p.email}`}>Email<span aria-hidden="true"> ↗</span></a></li>
+              {p.socials.map((s) => (
+                <li key={s.label}><Ext href={s.href}>{s.label}</Ext></li>
               ))}
-            </dl>
-          </Reveal>
-        </section>
-
-        <section id="projects" className="section container" aria-labelledby="projects-title">
-          <Reveal>
-            <SectionTitle id="projects" eyebrow="02 · Projects" title="Things I've built" />
-          </Reveal>
-          <div className="cards">
-            {p.projects.map((pr) => (
-              <Reveal key={pr.name} className="card-wrap">
-                <article className="card">
-                  <div className="card-top">
-                    <h3>{pr.name}</h3>
-                    {pr.status && <span className="badge">{pr.status}</span>}
-                  </div>
-                  <p>{pr.description}</p>
-                  {pr.features && (
-                    <ul className="feature-list">
-                      {pr.features.map((f) => (
-                        <li key={f}>{f}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <ul className="chips" aria-label="Technologies">
-                    {pr.tags.map((t) => (
-                      <li key={t} className="chip mono">{t}</li>
-                    ))}
-                  </ul>
-                  <div className="card-links">
-                    {pr.links.map((l) => (
-                      <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="text-link">
-                        {l.label} <ArrowIcon />
-                      </a>
-                    ))}
-                  </div>
-                </article>
-              </Reveal>
-            ))}
+            </ul>
           </div>
         </section>
 
-        <section id="experience" className="section container" aria-labelledby="experience-title">
-          <Reveal>
-            <SectionTitle id="experience" eyebrow="03 · Experience" title="Where I've worked" />
-          </Reveal>
-          <ol className="timeline">
-            {p.experience.map((j) => (
-              <li key={`${j.company}-${j.period}`}>
-                <Reveal>
-                  <div className="job-head">
-                    <h3>
-                      {j.role} <span className="at">· {j.company}</span>
-                    </h3>
-                    <p className="meta mono">
-                      {j.period} · {j.location}
-                    </p>
-                  </div>
-                  <ul className="bullets">
-                    {j.bullets.map((b) => (
-                      <li key={b}>{b}</li>
-                    ))}
+        <section id="work" className="section work" aria-labelledby="work-h">
+          <div className="container">
+            <h2 id="work-h" className="label work-label">Work</h2>
+            {p.projects.map((pr, i) => (
+              <article key={pr.name} className={`project${i % 2 ? ' flip' : ''}`}>
+                <div className="project-text">
+                  <h3>{pr.name}</h3>
+                  <p className="desc">{pr.description}</p>
+                  <ul className="feats">
+                    {pr.features.map((f) => <li key={f}>{f}</li>)}
                   </ul>
-                </Reveal>
+                  <p className="mono tags">{pr.tags.join(' · ')}</p>
+                  <p className="status mono"><span className="dot" aria-hidden="true" />{pr.status}</p>
+                  <p><Ext href={pr.link.href}>{pr.link.label}</Ext></p>
+                </div>
+                <div className="project-shot">
+                  <Shot kind={pr.shot} theme={theme} />
+                </div>
+              </article>
+            ))}
+            <p className="site-line">
+              {p.site.text}. <Ext href={p.site.link.href}>Source</Ext>
+            </p>
+          </div>
+        </section>
+
+        <Row id="about" label="About">
+          {p.about.map((t) => <p key={t} className="prose">{t}</p>)}
+        </Row>
+
+        <Row id="experience" label="Experience">
+          <ol className="companies">
+            {p.experience.map((c) => (
+              <li key={c.company} className="company">
+                <h3>{c.company} <span className="muted">{c.location}</span></h3>
+                {c.roles.map((r) => (
+                  <div key={r.title + r.period} className="role">
+                    <p className="mono period">{r.period}</p>
+                    <div>
+                      <p className="role-title">{r.title}</p>
+                      <ul className="bullets">
+                        {r.bullets.map((b) => <li key={b}>{b}</li>)}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
               </li>
             ))}
           </ol>
-        </section>
+        </Row>
 
-        <section id="skills" className="section container" aria-labelledby="skills-title">
-          <Reveal>
-            <SectionTitle id="skills" eyebrow="04 · Skills" title="Tools & technologies" />
-            <div className="skill-groups">
-              {p.skills.map((g) => (
-                <div key={g.title} className="skill-group">
-                  <h3>{g.title}</h3>
-                  <ul className="chips">
-                    {g.items.map((i) => (
-                      <li key={i} className="chip">{i}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </section>
+        <Row id="skills" label="Skills">
+          <dl className="skills">
+            {p.skills.map((g) => (
+              <div key={g.title} className="skill">
+                <dt>{g.title}</dt>
+                <dd>{g.items.join(', ')}</dd>
+              </div>
+            ))}
+          </dl>
+        </Row>
 
-        <section id="education" className="section container" aria-labelledby="education-title">
-          <Reveal>
-            <SectionTitle id="education" eyebrow="05 · Education" title="Education" />
-            <div className="card">
-              <h3>{p.education.degree}</h3>
-              <p>{p.education.school}</p>
-              <p className="meta mono">{p.education.year}</p>
-            </div>
-          </Reveal>
-        </section>
+        <Row id="education" label="Education">
+          <p className="prose">
+            {p.education.degree}, {p.education.school}. <span className="mono muted">{p.education.year}</span>
+          </p>
+        </Row>
 
-        <section id="contact" className="section container" aria-labelledby="contact-title">
-          <Reveal>
-            <SectionTitle id="contact" eyebrow="06 · Contact" title="Let's talk" />
-            <p className="lead">{p.contactCta}</p>
-            <div className="btn-row">
-              <a className="btn primary" href={`mailto:${p.email}`}>
-                <MailIcon /> Email me
-              </a>
-              {p.socials.map((s) => (
-                <a key={s.label} className="btn" href={s.href} target="_blank" rel="noopener noreferrer">
-                  <SocialIcon label={s.label} /> {s.label}
-                </a>
-              ))}
-            </div>
-          </Reveal>
-        </section>
+        <Row id="contact" label="Contact">
+          <p className="statement">{p.contact}</p>
+          <p className="mail"><a className="ul" href={`mailto:${p.email}`}>{p.email}</a></p>
+          <ul className="links">
+            {p.socials.map((s) => (
+              <li key={s.label}><Ext href={s.href}>{s.label}</Ext></li>
+            ))}
+          </ul>
+        </Row>
       </main>
       <footer className="footer">
-        <div className="container">© {YEAR} {p.name} · Built with React &amp; Vite.</div>
+        <div className="container">
+          <span>© {YEAR} {p.name}</span>
+          <span>{p.domain}</span>
+        </div>
       </footer>
     </>
   )
